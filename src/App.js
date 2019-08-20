@@ -51,7 +51,12 @@ class App extends React.Component {
           </Tabs>
         </Paper>
         <TabPanel value={tabValue} index={0}>
-          <Typography variant="subtitle1" component="p" align="center">
+          <Typography
+            variant="subtitle1"
+            component="p"
+            align="center"
+            className="detailsHeader"
+          >
             Enter The Details Below
           </Typography>
           <Paper elevation={2} className="addPaper">
