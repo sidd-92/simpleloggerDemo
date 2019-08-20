@@ -22,6 +22,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import ComplexGrid from "./Components/ComplexCard";
 import Moment from "moment";
 import MomentUtils from "@date-io/moment";
 import {
@@ -34,7 +35,7 @@ class App extends React.Component {
     this.state = {
       tabValue: 0,
       selectedDate: new Date(),
-      selectValue: { mealType: "Breakfast" },
+      selectValue: { mealType: "None" },
       mealOption: "Food",
       totalResident: "",
       totalGuest: "",
@@ -69,7 +70,7 @@ class App extends React.Component {
   };
   addLog = e => {
     let log = {
-      date: Moment(this.state.selectedDate).format("Do MMM"),
+      date: Moment(this.state.selectedDate).format("Do MMM YY"),
       mealType: this.state.selectValue.mealType,
       mealOption: this.state.mealOption,
       category: {
@@ -80,9 +81,23 @@ class App extends React.Component {
     };
     let newLogs = [];
     newLogs.push(log);
+    this.setState(
+      {
+        addedLogs: [...this.state.addedLogs, log],
+        openSnackBar: true,
+        tabValue: 1
+      },
+      this.resetFields()
+    );
+  };
+  resetFields = () => {
     this.setState({
-      addedLogs: [...this.state.addedLogs, log],
-      openSnackBar: true
+      selectedDate: new Date(),
+      selectValue: { mealType: "None" },
+      mealOption: "Food",
+      totalResident: "",
+      totalGuest: "",
+      totalHomeDelivery: ""
     });
   };
   render() {
@@ -135,7 +150,11 @@ class App extends React.Component {
             aria-label="disabled tabs example"
           >
             <Tab label="Add New Log" />
-            <Tab label="View Added Logs" />
+            {this.state.addedLogs.length > 0 ? (
+              <Tab label="View Added Logs" />
+            ) : (
+              <Tab disabled label="View Added Logs" />
+            )}
           </Tabs>
         </Paper>
         <TabPanel value={tabValue} index={0}>
@@ -150,7 +169,7 @@ class App extends React.Component {
           <Paper elevation={2} className="addPaper">
             <MuiPickersUtilsProvider utils={MomentUtils}>
               <KeyboardDatePicker
-                disablePast={true}
+                disableFuture={true}
                 margin="normal"
                 fullWidth
                 id="mui-pickers-date"
@@ -175,6 +194,7 @@ class App extends React.Component {
                   id: "mealType-simple"
                 }}
               >
+                <MenuItem value={"None"}>None</MenuItem>
                 <MenuItem value={"Breakfast"}>Breakfast</MenuItem>
                 <MenuItem value={"Lunch"}>Lunch</MenuItem>
                 <MenuItem value={"Snack"}>Snack</MenuItem>
@@ -192,13 +212,16 @@ class App extends React.Component {
                 value={mealOption}
                 onChange={(e, values) => this.handleMealOptionChange(e, values)}
               >
+                {selectValue.mealType !== "None" && (
+                  <FormControlLabel
+                    value="Food"
+                    control={<Radio />}
+                    label="Food"
+                  />
+                )}
+
                 <FormControlLabel
-                  value="food"
-                  control={<Radio />}
-                  label="Food"
-                />
-                <FormControlLabel
-                  value="beverage"
+                  value="Beverage"
                   control={<Radio />}
                   label="Beverage"
                 />
@@ -270,9 +293,7 @@ class App extends React.Component {
         <TabPanel value={tabValue} index={1}>
           {this.state.addedLogs.length > 0 &&
             this.state.addedLogs.map((log, i) => (
-              <div key={i}>
-                <p>{log.date}</p>
-              </div>
+              <ComplexGrid key={i} log={log} />
             ))}
         </TabPanel>
       </React.Fragment>
