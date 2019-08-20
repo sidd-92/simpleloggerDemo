@@ -1,6 +1,9 @@
 import React from "react";
 import "./App.css";
 import AppBar from "@material-ui/core/AppBar";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -19,6 +22,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import Moment from "moment";
 import MomentUtils from "@date-io/moment";
 import {
   MuiPickersUtilsProvider,
@@ -35,6 +39,7 @@ class App extends React.Component {
       totalResident: "",
       totalGuest: "",
       totalHomeDelivery: "",
+      openSnackBar: false,
       addedLogs: []
     };
   }
@@ -64,19 +69,30 @@ class App extends React.Component {
   };
   addLog = e => {
     let log = {
-      date: this.state.selectedDate,
+      date: Moment(this.state.selectedDate).format("Do MMM"),
       mealType: this.state.selectValue.mealType,
       mealOption: this.state.mealOption,
       category: {
-        r: this.state.totalResident || 0,
-        g: this.state.totalGuest || 0,
-        hd: this.state.totalHomeDelivery || 0
+        r: this.state.totalResident > 0 ? this.state.totalResident : 0,
+        g: this.state.totalGuest > 0 ? this.state.totalGuest : 0,
+        hd: this.state.totalHomeDelivery > 0 ? this.state.totalHomeDelivery : 0
       }
     };
-    console.log(log);
+    let newLogs = [];
+    newLogs.push(log);
+    this.setState({
+      addedLogs: [...this.state.addedLogs, log],
+      openSnackBar: true
+    });
   };
   render() {
-    const { tabValue, selectedDate, mealOption, selectValue } = this.state;
+    const {
+      tabValue,
+      selectedDate,
+      mealOption,
+      selectValue,
+      openSnackBar
+    } = this.state;
     return (
       <React.Fragment>
         <AppBar position="static">
@@ -86,6 +102,29 @@ class App extends React.Component {
             </Typography>
           </Toolbar>
         </AppBar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left"
+          }}
+          open={openSnackBar}
+          autoHideDuration={1000}
+          onClose={() => this.setState({ openSnackBar: false })}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={<span id="message-id">Log Added</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="close"
+              color="inherit"
+              onClick={() => this.setState({ openSnackBar: false })}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
         <Paper square>
           <Tabs
             variant="fullWidth"
@@ -229,7 +268,12 @@ class App extends React.Component {
           </Button>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
-          Item Two
+          {this.state.addedLogs.length > 0 &&
+            this.state.addedLogs.map((log, i) => (
+              <div key={i}>
+                <p>{log.date}</p>
+              </div>
+            ))}
         </TabPanel>
       </React.Fragment>
     );
