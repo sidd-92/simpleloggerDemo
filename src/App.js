@@ -7,6 +7,10 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabPanel from "./Components/TabPanel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import MomentUtils from "@date-io/moment";
 import {
   MuiPickersUtilsProvider,
@@ -17,7 +21,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       tabValue: 0,
-      selectedDate: new Date()
+      selectedDate: new Date(),
+      selectValue: { mealType: "" }
     };
   }
   handleTabChange = (e, v) => {
@@ -25,6 +30,9 @@ class App extends React.Component {
   };
   handleDateChange = date => {
     this.setState({ selectedDate: date });
+  };
+  handleSelectChange = (e, values) => {
+    this.setState({ selectValue: { mealType: e.target.value } });
   };
   render() {
     const { tabValue, selectedDate } = this.state;
@@ -74,6 +82,24 @@ class App extends React.Component {
                 }}
               />
             </MuiPickersUtilsProvider>
+          </Paper>
+          <Paper elevation={2} className="selectPaper">
+            <FormControl fullWidth>
+              <InputLabel htmlFor="mealType-simple">Meal Type</InputLabel>
+              <Select
+                value={this.state.selectValue.mealType}
+                onChange={(e, values) => this.handleSelectChange(e, values)}
+                inputProps={{
+                  name: "mealType",
+                  id: "mealType-simple"
+                }}
+              >
+                <MenuItem value={"breakfast"}>Breakfast</MenuItem>
+                <MenuItem value={"lunch"}>Lunch</MenuItem>
+                <MenuItem value={"snack"}>Snack</MenuItem>
+                <MenuItem value={"dinner"}>Dinner</MenuItem>
+              </Select>
+            </FormControl>
           </Paper>
         </TabPanel>
         <TabPanel value={tabValue} index={1}>

@@ -18,6 +18,11 @@ body {
 /*#91eae4, #86a8e7, #7f7fd5 */
 .addPaper {
   padding: 10px;
+  margin: 5px 0px;
+}
+.selectPaper {
+  padding: 20px;
+  margin: 5px 0px;
 }
 
 .detailsHeader {
