@@ -1,31 +1,30 @@
-body {
-  background: #6190e8; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #a7bfe8,
-    #6190e8
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #a7bfe8,
-    #6190e8
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  height: 100vh;
-}
 /*#91eae4, #86a8e7, #7f7fd5 */
 .addPaper {
   padding: 10px;
   margin: 5px 0px;
 }
 .selectPaper {
-  padding: 20px;
+  padding: 9px;
   margin: 5px 0px;
+}
+.gridText {
+  padding: 9px;
+  margin: 0 auto;
+}
+.gridPaper {
+  padding-left: 5px;
+  padding-top: 5px;
+  margin-bottom: 15px;
 }
 
 .detailsHeader {
   color: white;
   font-size: 1.3rem;
+}
+.addButton {
+  width: 100%;
+  background-color: #1c3aa1 !important;
+}
+.textField {
+  margin: 0px;
 }
