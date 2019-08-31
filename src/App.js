@@ -23,6 +23,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import ComplexGrid from "./Components/ComplexCard";
+import ExpansionPanels from "./Components/ExpansionPanels";
 import Moment from "moment";
 import MomentUtils from "@date-io/moment";
 import {
@@ -36,7 +37,7 @@ class App extends React.Component {
       tabValue: 0,
       selectedDate: new Date(),
       selectValue: { mealType: "None" },
-      mealOption: "Food",
+      mealOption: "Beverage",
       totalResident: "",
       totalGuest: "",
       totalHomeDelivery: "",
@@ -151,9 +152,14 @@ class App extends React.Component {
           >
             <Tab label="Add New Log" />
             {this.state.addedLogs.length > 0 ? (
-              <Tab label="View Added Logs" />
+              <Tab label="Added Logs" />
             ) : (
-              <Tab disabled label="View Added Logs" />
+              <Tab disabled label="Added Logs" />
+            )}
+            {this.state.addedLogs.length > 0 ? (
+              <Tab label="Summary" />
+            ) : (
+              <Tab disabled label="Summary" />
             )}
           </Tabs>
         </Paper>
@@ -295,6 +301,9 @@ class App extends React.Component {
             this.state.addedLogs.map((log, i) => (
               <ComplexGrid key={i} log={log} />
             ))}
+        </TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          <ExpansionPanels />
         </TabPanel>
       </React.Fragment>
     );
