@@ -22,10 +22,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import Badge from "@material-ui/core/Badge";
 import ComplexGrid from "./Components/ComplexCard";
 import ExpansionPanels from "./Components/ExpansionPanels";
 import Moment from "moment";
 import MomentUtils from "@date-io/moment";
+import axios from "axios";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -44,6 +46,50 @@ class App extends React.Component {
       openSnackBar: false,
       addedLogs: []
     };
+  }
+  componentDidMount() {
+    /*
+    let log = {
+      date: Moment(this.state.selectedDate).format("Do MMM YY"),
+      mealType: this.state.selectValue.mealType,
+      mealOption: this.state.mealOption,
+      category: {
+        r: this.state.totalResident > 0 ? this.state.totalResident : 0,
+        g: this.state.totalGuest > 0 ? this.state.totalGuest : 0,
+        hd: this.state.totalHomeDelivery > 0 ? this.state.totalHomeDelivery : 0
+      }
+    };
+    */
+    /*
+    dateLogged: "2019-07-08T00:00:00.000Z"
+    isBeverage: true
+    mealType: "None"
+    totalGuest: 0
+    totalHD: 2
+    totalResident: 0
+     */
+    axios.get(`http://192.168.86.250:9000/logs`).then(res => {
+      const { count, logs } = res.data;
+      console.log("Logs", ...logs);
+      console.log("Count", count);
+      let newLogArray = [];
+      logs.map(log => {
+        let newLog = {
+          date: Moment(log.dateLogged).format("Do MMM YY"),
+          mealType: log.mealType,
+          mealOption: log.isBeverage ? "Beverage" : "Food",
+          category: {
+            r: log.totalResident,
+            g: log.totalGuest,
+            hd: log.totalHD
+          }
+        };
+        newLogArray.push(newLog);
+      });
+      this.setState({
+        addedLogs: [...this.state.addedLogs, ...newLogArray]
+      });
+    });
   }
   handleTabChange = (e, v) => {
     this.setState({ tabValue: v });
@@ -151,11 +197,17 @@ class App extends React.Component {
             aria-label="disabled tabs example"
           >
             <Tab label="Add New Log" />
-            {this.state.addedLogs.length > 0 ? (
-              <Tab label="Added Logs" />
-            ) : (
-              <Tab disabled label="Added Logs" />
-            )}
+            <Tab
+              label={
+                <Badge
+                  className="badgeCount"
+                  color="secondary"
+                  badgeContent={this.state.addedLogs.length}
+                >
+                  View Logs
+                </Badge>
+              }
+            />
             {this.state.addedLogs.length > 0 ? (
               <Tab label="Summary" />
             ) : (
