@@ -28,6 +28,7 @@ import ExpansionPanels from "./Components/ExpansionPanels";
 import Moment from "moment";
 import MomentUtils from "@date-io/moment";
 import axios from "axios";
+import FullScreenDialog from "./Components/FullScreenModal";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -159,9 +160,10 @@ class App extends React.Component {
       <React.Fragment>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" color="inherit">
+            <Typography variant="h6" color="inherit" style={{ flexGrow: 1 }}>
               Food Logger
             </Typography>
+            <FullScreenDialog />
           </Toolbar>
         </AppBar>
         <Snackbar
